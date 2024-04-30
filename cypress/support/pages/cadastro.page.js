@@ -10,12 +10,15 @@ export default class CadastroPage {
     typeNome(nome){
         cy.get(this.inputNome).type(nome);
     }
+    
     typeEmail(email){
         cy.get(this.inputEmail).type(email);
     }
+
    clickButtonSalvar(){
     cy.get(this.buttonSalvar).click();    
    }
+   
    cadastrar(nome, email){
     this.typeNome(nome);
     this.typeEmail(email);
