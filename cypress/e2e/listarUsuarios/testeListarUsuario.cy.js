@@ -5,13 +5,32 @@ describe('testes de listagem de usuários', function () {
    
     var paginaUsuario = new UsuarioPage();
 
-
-
     it('Deve exibir a lista de usuários', function () {
 
-        cy.intercept('GET', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users').as('user');
+        cy.intercept('GET', '/api/v1/users').as('user');
         cy.visit('');
         cy.wait('@user');
+        cy.get(paginaUsuario.listaUsuarios).should('exist').and('be.visible');
+        
+    });
+
+    it('Deve ser possível consultar a lista de usuários', function () {
+
+        cy.intercept('GET', '/api/v1/users', {
+            statusCode:200,
+            fixture: 'listaUsuarios6.json',
+        }).as('user')
+        
+        cy.visit('');
+        cy.wait('@user').then(function(ConsultaUsuarios){
+            cy.log(ConsultaUsuarios);
+            const listaUsuarios = ConsultaUsuarios.response.body;
+            
+            listaUsuarios.forEach(function(usuarios){
+                cy.contains(paginaUsuario.labelNome, 'Nome: ' + usuarios.name);
+                cy.contains(paginaUsuario.labelEmail, 'E-mail: ' + usuarios.email.slice(0,20)) 
+            })
+        })
         cy.get(paginaUsuario.listaUsuarios).should('exist').and('be.visible');
         
     });
@@ -25,7 +44,7 @@ describe('testes de listagem de usuários', function () {
 
         cy.visit('');
         cy.wait('@user');        
-        cy.contains('[href="/users/novo"]', 'Cadastre um novo usuário').should('exist').and('be.visible');
+        cy.contains(paginaUsuario.linkCadastroUsuario, 'Cadastre um novo usuário').should('exist').and('be.visible');
         cy.get(paginaUsuario.listaUsuarios).should('not.exist');
 
 
@@ -40,7 +59,7 @@ describe('testes de listagem de usuários', function () {
 
         cy.visit('');
         cy.wait('@user');
-        cy.contains('[href="/users/novo"]', 'Cadastre um novo usuário').should('exist').and('be.visible');
+        cy.contains(paginaUsuario.linkCadastroUsuario, 'Cadastre um novo usuário').should('exist').and('be.visible');
         //cy.contains('.sc-bmzYkS'); Pq consigo clicar, mas não consigo falar que existe?
         cy.get('.sc-bmzYkS').click();        
         cy.url().should('equal', 'https://rarocrud-frontend-88984f6e4454.herokuapp.com/users/novo');
@@ -60,7 +79,7 @@ describe('testes de paginação', function () {
         beforeEach(function () {
             cy.intercept('GET', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users', {
                 statusCode: 200,
-                fixture: "listaUsuarios.json",
+                fixture: "listaUsuarios10.json",
             }).as('user');
             cy.visit('');
         });
@@ -87,7 +106,7 @@ describe('testes de paginação', function () {
         beforeEach(function () {
             cy.intercept('GET', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users', {
                 statusCode: 200,
-                fixture: "listaUsuarios2.json",
+                fixture: "listaUsuarios15.json",
             }).as('user');
             cy.visit('');
         });

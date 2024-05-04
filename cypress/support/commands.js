@@ -23,3 +23,14 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+import UsuarioPage from '../support/pages/usuarios.page';
+
+Cypress.Commands.add('deletarUsuario', function () { 
+    var paginaUsuario = new UsuarioPage();
+    
+    cy.get(paginaUsuario.buttonDelete).click();
+    cy.get('button').contains('Confirmar').click();
+    cy.contains('Usuário removido!').should('exist').and('be.visible');//necessário para a API esperar
+    
+})

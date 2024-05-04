@@ -1,0 +1,44 @@
+[
+    {
+        "id": "e34647d5-a470-422d-8143-dc1e5cf10d4f",
+        "name": "Dr. Gerald Kohler",
+        "email": "Barney53@hotmail.com",
+        "createdAt": "2024-05-03T14:28:12.810Z",
+        "updatedAt": "2024-05-03T14:28:12.810Z"
+    },
+    {
+        "id": "c27535ab-a06d-4fb3-855b-df2d8eb45336",
+        "name": "Maria Cecília Pereira",
+        "email": "yasmin.costa@gmail.com",
+        "createdAt": "2024-05-03T14:58:30.037Z",
+        "updatedAt": "2024-05-03T14:58:30.037Z"
+    },
+    {
+        "id": "21640bc1-398b-4ade-9bbe-884551e53301",
+        "name": "Ana Júlia Barros",
+        "email": "paula_carvalho65@gmail.com",
+        "createdAt": "2024-05-03T14:58:47.110Z",
+        "updatedAt": "2024-05-03T14:58:47.110Z"
+    },
+    {
+        "id": "2bc63129-dbbb-49aa-b391-4e903130f2eb",
+        "name": "Danilo Barros Jr.",
+        "email": "sophia32@yahoo.com",
+        "createdAt": "2024-05-03T14:59:51.874Z",
+        "updatedAt": "2024-05-03T14:59:51.874Z"
+    },
+    {
+        "id": "81d0b3b1-1106-4da0-bc17-c24c59be5369",
+        "name": "Sophia Martins",
+        "email": "emanuelly_barros31@hotmail.com",
+        "createdAt": "2024-05-03T15:01:03.654Z",
+        "updatedAt": "2024-05-03T15:01:03.654Z"
+    },
+    {
+        "id": "ec2459c8-e4c5-4dba-a138-c32b33b2e490",
+        "name": "Washington Moraes",
+        "email": "sara_costa@live.com",
+        "createdAt": "2024-05-03T15:02:31.946Z",
+        "updatedAt": "2024-05-03T15:02:31.946Z"
+    }
+]

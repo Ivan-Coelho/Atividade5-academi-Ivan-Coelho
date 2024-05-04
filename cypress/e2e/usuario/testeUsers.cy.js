@@ -17,7 +17,7 @@ describe('testes de criação de usuário', function () {
 
         it('Não deve ser possível cadastrar um usuário sem informar um nome', function () {
             let email = faker.internet.email();
-            
+
             paginaCadastro.typeEmail(email);
             paginaCadastro.clickButtonSalvar();
             cy.contains('.sc-cPiKLX.feFrSQ', 'O campo nome é obrigatório.').should('exist').and('be.visible');
@@ -29,7 +29,7 @@ describe('testes de criação de usuário', function () {
             paginaCadastro.typeNome('Ivan Barbalho');
             paginaCadastro.clickButtonSalvar();
             cy.contains('O campo e-mail é obrigatório').should('exist').and('be.visible');
-           // cy.get('.sc-cPiKLX.feFrSQ').should('be.visible').and('exist'); //AQUI
+            // cy.get('.sc-cPiKLX.feFrSQ').should('be.visible').and('exist'); //AQUI
 
         });
 
@@ -43,7 +43,7 @@ describe('testes de criação de usuário', function () {
 
         it('Não deve ser possível cadastrar um usuário informando menos de 4 caracteres para o campo nome', function () {
             let email = faker.internet.email();
-            
+
             paginaCadastro.typeNome('Ian');
             paginaCadastro.typeEmail(email);
             paginaCadastro.clickButtonSalvar();
@@ -52,7 +52,7 @@ describe('testes de criação de usuário', function () {
 
         it('Não deve ser possível cadastrar um usuário informando mais de 100 caracteres para o campo nome', function () {
             let email = faker.internet.email();
-           
+
             paginaCadastro.typeNome('Pedro De Alcântara João Carlos Leopoldo S. B. F. X. D Paula L. M. G. R. Gonzaga De Bragança E Bourbon');
             paginaCadastro.typeEmail(email);
             paginaCadastro.clickButtonSalvar();
@@ -61,7 +61,7 @@ describe('testes de criação de usuário', function () {
 
         it('Não deve ser possível cadastrar um usuário informando mais de 60 caracteres para o campo email', function () {
 
-            
+
             paginaCadastro.typeNome('Ivan Barbalho');
             paginaCadastro.typeEmail('precisodeumemailenormedegrandeparatestaressetrem1@raro.com.br');
             paginaCadastro.clickButtonSalvar();
@@ -73,17 +73,13 @@ describe('testes de criação de usuário', function () {
 
             paginaCadastro.typeNome('          ');
             paginaCadastro.typeEmail(email);
-            //cy.intercept('POST', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users').as('postUsuario')
-
+            
             paginaCadastro.clickButtonSalvar();
             cy.contains('Não foi possível cadastrar o usuário!').should('exist').and('be.visible');
-            // cy.wait('@postUsuario').then(function(response){
-            //     cy.log(response)
-            //     expect(response.body.erro).to.equal('Não foi possível cadastrar o usuário!');
-            // });           
+                     
         });
 
-        it('Não deve ser possível cadastrar um usuário com caracteres number no campo nome', function () {           
+        it('Não deve ser possível cadastrar um usuário com caracteres number no campo nome', function () {
             let email = faker.internet.email();
 
             paginaCadastro.typeNome('Ian7');
@@ -104,7 +100,7 @@ describe('testes de criação de usuário', function () {
         });
 
         it('Não deve ser possível cadastrar um usuário com caracteres especiais no campo email', function () {
-            
+
             paginaCadastro.typeNome('Ivan Barbalho');
             paginaCadastro.typeEmail('asasdsagfds@jhgkçmw.com');
             paginaCadastro.clickButtonSalvar();
@@ -121,30 +117,30 @@ describe('testes de criação de usuário', function () {
 
         });
 
-        it('Não deve ser possível cadastrar um novo usuário com email já cadastrado', function () { 
+        it('Não deve ser possível cadastrar um novo usuário com email já cadastrado', function () {
             // validar esse teste - testando os proprios dados que eu envio
             let email = faker.internet.email();
 
-            cy.intercept('POST', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users',{
-                statusCode : 422,
-                body:{Erro: 'Este e-mail já é utilizado por outro usuário.'}
+            cy.intercept('POST', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users', {
+                statusCode: 422,
+                body: { Erro: 'Este e-mail já é utilizado por outro usuário.' }
             }).as('postUsuarios');
 
             cy.stub().as('alertaStub')
-           cy.on("@postUsuarios", this.alertaStub);            
+            cy.on("@postUsuarios", this.alertaStub);
 
             paginaCadastro.cadastrar('Ivan C Barbalho', email);
 
-            cy.wait('@postUsuarios').then(function(seila){
-                cy.log(seila.response);                
+            cy.wait('@postUsuarios').then(function (seila) {
+                cy.log(seila.response);
                 expect(seila.response.body.Erro).to.deep.equal('Este e-mail já é utilizado por outro usuário.')
             })
             cy.get('.sc-dCFHLb.lmTxRO').should('be.visible').and('exist');
 
         });
 
-        it('Não deve ser possível cadastrar um novo usuário com email já cadastrado', function () { 
-            
+        it('Não deve ser possível cadastrar um novo usuário com email já cadastrado', function () {
+
             let email = faker.internet.email();
 
             cy.intercept('POST', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users').as('postUsuarios');
@@ -155,10 +151,17 @@ describe('testes de criação de usuário', function () {
 
             cy.wait('@postUsuarios');
             paginaCadastro.cadastrar('Ivan Coelho', email);
+
+            cy.contains(paginaCadastro.erroEmailUtilizado, 'Este e-mail já é utilizado por outro usuário.').should('be.visible');
+
+            //apagando o usuário
+            cy.get('button').contains('Cancelar').click();
+            cy.get(paginaCadastro.linkPaginaUsuarios).click();
+            cy.get(paginaUsuario.inputBuscaUsuario).type(email);            
+            
+            cy.deletarUsuario();
            
-           cy.contains(paginaCadastro.erroEmailUtilizado, 'Este e-mail já é utilizado por outro usuário.').should('be.visible');
-           cy.get('.sc-dCFHLb.lmTxRO').should('be.visible').and('exist');
-                       
+
         });
 
         // it('Ao tentar cadastrar um usuário com email já cadastrado o sistema deve retornar a mensagem "User already exists."', function () {
@@ -189,13 +192,12 @@ describe('testes de criação de usuário', function () {
             //apagando usuário criado
             cy.get(paginaCadastro.linkPaginaUsuarios).click();
             cy.get(paginaUsuario.inputBuscaUsuario).type(email);
-            cy.get('.sc-fUnMCh.dttKkA').click();
-            cy.get('button').contains('Confirmar').click();
             
+            cy.deletarUsuario();
 
         });
-        
-        it('Deve ser possível cadastrar um usuário com o campo nome de até 100 caracteres', function(){            
+
+        it('Deve ser possível cadastrar um usuário com o campo nome de até 100 caracteres', function () {
 
             let email = faker.internet.email();
 
@@ -206,19 +208,20 @@ describe('testes de criação de usuário', function () {
             paginaCadastro.clickButtonSalvar();
             cy.wait('@postUser');
             cy.contains('Usuário salvo com sucesso').should('exist').and('be.visible');
+            
+            
 
             //apagando usuário criado
             cy.get(paginaCadastro.linkPaginaUsuarios).click();
-            cy.get(paginaUsuario.inputBuscaUsuario).type(email);
-            cy.get('.sc-fUnMCh.dttKkA').click();
-            cy.get('button').contains('Confirmar').click();
+            cy.get(paginaUsuario.inputBuscaUsuario).type(email);          
+            cy.deletarUsuario();
 
         });
 
-        it('Deve ser possível cadastrar um usuário com o campo email de até 60 caracteres', function(){
+        it('Deve ser possível cadastrar um usuário com o campo email de até 60 caracteres', function () {
             //tem que apagar esse usuário para o teste não ficar intermitente
             cy.intercept('POST', 'https://rarocrud-80bf38b38f1f.herokuapp.com/api/v1/users').as('postUser')
-            
+
             paginaCadastro.typeNome('Ivan C B');
             paginaCadastro.typeEmail('precisodeumemailenormedegrandeparatestaressetrem@raro.com.br');
             paginaCadastro.clickButtonSalvar();
@@ -227,15 +230,10 @@ describe('testes de criação de usuário', function () {
             //apagando usuário criado
             cy.get(paginaCadastro.linkPaginaUsuarios).click();
             cy.get(paginaUsuario.inputBuscaUsuario).type('precisodeumemailenormedegrandeparatestaressetrem@raro.com.br');
-            cy.get('.sc-fUnMCh.dttKkA').click();
-            cy.get('button').contains('Confirmar').click();
             
+            cy.deletarUsuario();
+
         });
 
-        
-
     });
-
-    
-
 })
